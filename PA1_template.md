@@ -118,3 +118,22 @@ The mean number of steps per day of imputed data is **10749.8** steps and is sho
 The median number of steps per day of imputed data is **10641** steps and shown in blue dotted line on above graph.
 
 ## Are there differences in activity patterns between weekdays and weekends?
+
+
+```r
+df.imputed.weekly <- df.imputed %>%
+    mutate(day = wday(ymd(df.imputed$date), label=TRUE),
+           Week.Class = ifelse(day %in% c("Sat", "Sun"), "Weekend", "Weekday"))
+df.imputed.weekly.summary <- df.imputed.weekly %>%
+    mutate(Time = str_pad(df.imputed$interval, 4, pad="0"),
+           DateTime = paste0("2015-03-11", " ", Time), # Fake date to use lubridate
+           TrialInterval = ymd_hm(DateTime)) %>% 
+    group_by(TrialInterval, Week.Class) %>%
+    summarize(Reps = n(),
+              Steps = mean(Imp.Steps, na.rm=TRUE),
+              Interval = unique(interval))
+ggplot(df.imputed.weekly.summary, aes(x=TrialInterval, y=Steps)) + geom_line() + 
+    scale_x_datetime(labels=date_format("%I:%M %P")) + facet_grid(Week.Class ~ .)
+```
+
+![plot of chunk unnamed-chunk-6](figure/unnamed-chunk-6-1.png) 
