@@ -8,27 +8,34 @@ output:
 Loading packages "dplyr" and "ggplot2" done with include="FALSE" to restrict package loading messages.
 
 ## Loading and preprocessing the data
-```{r echo=TRUE, include=FALSE}
-require(dplyr)
-require(ggplot2)
-require(lubridate)
-require(scales)
-require(stringr)
-```
+
 
 Load data.frame with activity.csv data
 
-```{r, echo=TRUE, message=FALSE}
+
+```r
 options(scipen = 5, digits = 1)
 df.raw <- read.csv("activity.csv")
 summary(df.raw)
+```
+
+```
+##      steps              date          interval   
+##  Min.   :  0    2012-10-01:  288   Min.   :   0  
+##  1st Qu.:  0    2012-10-02:  288   1st Qu.: 589  
+##  Median :  0    2012-10-03:  288   Median :1178  
+##  Mean   : 37    2012-10-04:  288   Mean   :1178  
+##  3rd Qu.: 12    2012-10-05:  288   3rd Qu.:1766  
+##  Max.   :806    2012-10-06:  288   Max.   :2355  
+##  NA's   :2304   (Other)   :15840
 ```
 
 ## What is mean total number of steps taken per day?
 
 Use dplyr summarize function to calculate the average steps per day without removing NA values. Then use ggplot2 histogram to plot frequencies of steps per day counts. NAs were removed from mean and median calculations.
 
-```{r}
+
+```r
 df.raw.summary <- tbl_df(df.raw) %>%
     group_by(date) %>%
     summarize(Avg.Steps = sum(steps, na.rm=TRUE))
@@ -37,16 +44,22 @@ ggplot(df.raw.summary, aes(x=Avg.Steps)) +
     geom_histogram() + 
     geom_vline(xintercept=mean(df.raw.summary$Avg.Steps, na.rm=TRUE), linetype="longdash", colour="red", size=1) +
     geom_vline(xintercept=median(df.raw.summary$Avg.Steps, na.rm=TRUE), linetype="dotted", colour="blue", size=1)
-
 ```
 
-The mean number of steps per day of raw data is **$`r round(mean(df.raw.summary$Avg.Steps, na.rm=TRUE), digits=1)`$** steps and is shown in red dashed line on above graph.
+```
+## stat_bin: binwidth defaulted to range/30. Use 'binwidth = x' to adjust this.
+```
 
-The median number of steps per day of raw data is **$`r round(median(df.raw.summary$Avg.Steps, na.rm=TRUE), digits=1)`$** steps and shown in blue dotted line on above graph.
+![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3-1.png) 
+
+The mean number of steps per day of raw data is **$9354.2$** steps and is shown in red dashed line on above graph.
+
+The median number of steps per day of raw data is **$10395$** steps and shown in blue dotted line on above graph.
 
 ## What is the average daily activity pattern?
 
-```{r}
+
+```r
 df.raw.time.summary <- df.raw %>%
     mutate(Time = str_pad(df.raw$interval, 4, pad="0"),
            DateTime = paste0("2015-03-11", " ", Time), # Fake date to use lubridate
@@ -59,11 +72,14 @@ ggplot(df.raw.time.summary, aes(x=TrialInterval, y=Steps)) + geom_line() +
     scale_x_datetime(labels=date_format("%I:%M %P"))
 ```
 
+![plot of chunk unnamed-chunk-4](figure/unnamed-chunk-4-1.png) 
+
 ## Imputing missing values
 
-There are a total of **$`r sum(!complete.cases(df.raw))`$** rows of data missing "steps" observations (i.e. steps = NA) out of **$`r nrow(df.raw)`$** total rows in dataset.
+There are a total of **$2304$** rows of data missing "steps" observations (i.e. steps = NA) out of **$17568$** total rows in dataset.
 
-```{r}
+
+```r
 df.imputed <- tbl_df(df.raw) %>%
     mutate(Imp.Steps = as.integer(ifelse(is.na(df.raw$steps) == TRUE, df.raw.time.summary$Steps[df.raw.time.summary$Interval %in% df.raw$interval], df.raw$steps)))
 df.imputed.summary <- tbl_df(df.imputed) %>%
@@ -73,6 +89,15 @@ ggplot(df.imputed.summary, aes(x=Avg.Steps)) +
     geom_histogram() + 
     geom_vline(xintercept=mean(df.imputed.summary$Avg.Steps, na.rm=TRUE), linetype="longdash", colour="red", size=1) +
     geom_vline(xintercept=median(df.imputed.summary$Avg.Steps, na.rm=TRUE), linetype="dotted", colour="blue", size=1)
+```
+
+```
+## stat_bin: binwidth defaulted to range/30. Use 'binwidth = x' to adjust this.
+```
+
+![plot of chunk unnamed-chunk-5](figure/unnamed-chunk-5-1.png) 
+
+```r
 ## Graph imputed dataset
 df.imputed.time.summary <- df.imputed %>%
     mutate(Time = str_pad(df.imputed$interval, 4, pad="0"),
@@ -84,11 +109,12 @@ df.imputed.time.summary <- df.imputed %>%
               Interval = unique(interval))
 ggplot(df.imputed.time.summary, aes(x=TrialInterval, y=Steps)) + geom_line() + 
     scale_x_datetime(labels=date_format("%I:%M %P"))
-
 ```
 
-The mean number of steps per day of imputed data is **$`r round(mean(df.imputed.summary$Avg.Steps, na.rm=TRUE), digits=1)`$** steps and is shown in red dashed line on above graph.
+![plot of chunk unnamed-chunk-5](figure/unnamed-chunk-5-2.png) 
 
-The median number of steps per day of imputed data is **$`r round(median(df.imputed.summary$Avg.Steps, na.rm=TRUE), digits=1)`$** steps and shown in blue dotted line on above graph.
+The mean number of steps per day of imputed data is **$10749.8$** steps and is shown in red dashed line on above graph.
+
+The median number of steps per day of imputed data is **$10641$** steps and shown in blue dotted line on above graph.
 
 ## Are there differences in activity patterns between weekdays and weekends?
