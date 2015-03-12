@@ -52,9 +52,9 @@ ggplot(df.raw.summary, aes(x=Avg.Steps)) +
 
 ![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3-1.png) 
 
-The mean number of steps per day of raw data is **$9354.2$** steps and is shown in red dashed line on above graph.
+The mean number of steps per day of raw data is **9354.2** steps and is shown in red dashed line on above graph.
 
-The median number of steps per day of raw data is **$10395$** steps and shown in blue dotted line on above graph.
+The median number of steps per day of raw data is **10395** steps and shown in blue dotted line on above graph.
 
 ## What is the average daily activity pattern?
 
@@ -113,8 +113,8 @@ ggplot(df.imputed.time.summary, aes(x=TrialInterval, y=Steps)) + geom_line() +
 
 ![plot of chunk unnamed-chunk-5](figure/unnamed-chunk-5-2.png) 
 
-The mean number of steps per day of imputed data is **$10749.8$** steps and is shown in red dashed line on above graph.
+The mean number of steps per day of imputed data is **10749.8** steps and is shown in red dashed line on above graph.
 
-The median number of steps per day of imputed data is **$10641$** steps and shown in blue dotted line on above graph.
+The median number of steps per day of imputed data is **10641** steps and shown in blue dotted line on above graph.
 
 ## Are there differences in activity patterns between weekdays and weekends?
