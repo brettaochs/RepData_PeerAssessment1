@@ -10,7 +10,7 @@ Load data.frame with activity.csv data
 
 ```r
 options(scipen = 5, digits = 1)
-df.raw <- read.csv("activity.csv")
+df.raw <- read.csv(unz("activity.zip", "activity.csv"))
 summary(df.raw)
 ```
 
@@ -42,10 +42,10 @@ ggplot(df.raw.summary, aes(x=Avg.Steps)) +
 ```
 
 ```
-## stat_bin: binwidth defaulted to range/30. Use 'binwidth = x' to adjust this.
+## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-3-1.png) 
+![](PA1_template_files/figure-html/unnamed-chunk-3-1.png)
 
 The mean number of steps per day of raw data is **9354.2** steps and is shown in red dashed line on above graph.
 
@@ -67,7 +67,7 @@ ggplot(df.raw.time.summary, aes(x=TrialInterval, y=Steps)) + geom_line() +
     scale_x_datetime(labels=date_format("%I:%M %P"))
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-4-1.png) 
+![](PA1_template_files/figure-html/unnamed-chunk-4-1.png)
 
 ## Imputing missing values
 
@@ -87,10 +87,10 @@ ggplot(df.imputed.summary, aes(x=Avg.Steps)) +
 ```
 
 ```
-## stat_bin: binwidth defaulted to range/30. Use 'binwidth = x' to adjust this.
+## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-5-1.png) 
+![](PA1_template_files/figure-html/unnamed-chunk-5-1.png)
 
 ```r
 ## Graph imputed dataset
@@ -106,7 +106,7 @@ ggplot(df.imputed.time.summary, aes(x=TrialInterval, y=Steps)) + geom_line() +
     scale_x_datetime(labels=date_format("%I:%M %P"))
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-5-2.png) 
+![](PA1_template_files/figure-html/unnamed-chunk-5-2.png)
 
 The mean number of steps per day of imputed data is **10749.8** steps and is shown in red dashed line on above graph.
 
@@ -131,4 +131,4 @@ ggplot(df.imputed.weekly.summary, aes(x=TrialInterval, y=Steps)) + geom_line() +
     scale_x_datetime(labels=date_format("%I:%M %P")) + facet_grid(Week.Class ~ .)
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-6-1.png) 
+![](PA1_template_files/figure-html/unnamed-chunk-6-1.png)
