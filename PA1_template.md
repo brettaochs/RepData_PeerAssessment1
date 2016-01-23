@@ -5,7 +5,7 @@ Loading packages "dplyr" and "ggplot2" done with include="FALSE" to restrict pac
 ## Loading and preprocessing the data
 
 
-Load data.frame with activity.csv data
+Unzip and read in activity.csv from working directory into data frame.
 
 
 ```r
@@ -27,7 +27,7 @@ summary(df.raw)
 
 ## What is mean total number of steps taken per day?
 
-Use dplyr summarize function to calculate the average steps per day without removing NA values. Then use ggplot2 histogram to plot frequencies of steps per day counts. NAs were removed from mean and median calculations.
+Use the dplyr summarize function to calculate average steps per day without removing "NA"" values. Then use ggplot2 histogram to plot frequencies of steps per day counts. "NA"s were removed from mean and median calculations plotted on graph and called out in text below.
 
 
 ```r
@@ -38,7 +38,12 @@ df.raw.summary <- tbl_df(df.raw) %>%
 ggplot(df.raw.summary, aes(x=Avg.Steps)) + 
     geom_histogram() + 
     geom_vline(xintercept=mean(df.raw.summary$Avg.Steps, na.rm=TRUE), linetype="longdash", colour="red", size=1) +
-    geom_vline(xintercept=median(df.raw.summary$Avg.Steps, na.rm=TRUE), linetype="dotted", colour="blue", size=1)
+    geom_vline(xintercept=median(df.raw.summary$Avg.Steps, na.rm=TRUE), linetype="dotted", colour="blue", size=1) + 
+    labs(title="Distribution of Total Number of Steps per Day", x="Total Number Steps per Day", y="Count") + 
+    theme(axis.text.x=element_text(angle=30, vjust=0.5, size=8),
+          axis.text.y=element_text(size=8),
+          axis.title=element_text(size=10),
+          plot.title=element_text(size=12, face="bold"), legend.position="bottom")
 ```
 
 ```
@@ -47,9 +52,11 @@ ggplot(df.raw.summary, aes(x=Avg.Steps)) +
 
 ![](PA1_template_files/figure-html/TotalStepNumber-1.png)
 
-The mean number of steps per day of raw data is **9354.2** steps and is shown in red dashed line on above graph.
+While we see many "NA" values showing up as zeros in this graph, we can remove "NA"s to calculate mean and median values for the data set.
 
-The median number of steps per day of raw data is **10395** steps and shown in blue dotted line on above graph.
+- The mean number of steps per day of raw data is **9354** steps and is shown in red dashed line on above graph.
+
+- The median number of steps per day of raw data is **10395** steps and shown in blue dotted line on above graph.
 
 ## What is the average daily activity pattern?
 
