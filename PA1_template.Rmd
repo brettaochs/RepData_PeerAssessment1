@@ -8,7 +8,7 @@ output:
 Loading packages "dplyr" and "ggplot2" done with include="FALSE" to restrict package loading messages.
 
 ## Loading and preprocessing the data
-```{r echo=TRUE, include=FALSE}
+```{r LoadPackages, echo=TRUE, include=FALSE}
 require(dplyr)
 require(ggplot2)
 require(lubridate)
@@ -18,7 +18,7 @@ require(stringr)
 
 Load data.frame with activity.csv data
 
-```{r, echo=TRUE, message=FALSE}
+```{r LoadData, echo=TRUE, message=FALSE}
 options(scipen = 5, digits = 1)
 df.raw <- read.csv(unz("activity.zip", "activity.csv"))
 summary(df.raw)
@@ -28,7 +28,7 @@ summary(df.raw)
 
 Use dplyr summarize function to calculate the average steps per day without removing NA values. Then use ggplot2 histogram to plot frequencies of steps per day counts. NAs were removed from mean and median calculations.
 
-```{r}
+```{r TotalStepNumber}
 df.raw.summary <- tbl_df(df.raw) %>%
     group_by(date) %>%
     summarize(Avg.Steps = sum(steps, na.rm=TRUE))
@@ -46,7 +46,7 @@ The median number of steps per day of raw data is **`r round(median(df.raw.summa
 
 ## What is the average daily activity pattern?
 
-```{r}
+```{r AverageDailyActivityPattern}
 df.raw.time.summary <- df.raw %>%
     mutate(Time = str_pad(df.raw$interval, 4, pad="0"),
            DateTime = paste0("2015-03-11", " ", Time), # Fake date to use lubridate
@@ -63,7 +63,7 @@ ggplot(df.raw.time.summary, aes(x=TrialInterval, y=Steps)) + geom_line() +
 
 There are a total of **$`r sum(!complete.cases(df.raw))`$** rows of data missing "steps" observations (i.e. steps = NA) out of **$`r nrow(df.raw)`$** total rows in dataset.
 
-```{r}
+```{r ImputingMissingValues}
 df.imputed <- tbl_df(df.raw) %>%
     mutate(Imp.Steps = as.integer(ifelse(is.na(df.raw$steps) == TRUE, df.raw.time.summary$Steps[df.raw.time.summary$Interval %in% df.raw$interval], df.raw$steps)))
 df.imputed.summary <- tbl_df(df.imputed) %>%
@@ -93,7 +93,7 @@ The median number of steps per day of imputed data is **`r round(median(df.imput
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
-```{r}
+```{r ActivityPatternDifferenceWeekendVsWeekday}
 df.imputed.weekly <- df.imputed %>%
     mutate(day = wday(ymd(df.imputed$date), label=TRUE),
            Week.Class = ifelse(day %in% c("Sat", "Sun"), "Weekend", "Weekday"))
