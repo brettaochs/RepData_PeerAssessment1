@@ -20,7 +20,7 @@ Load data.frame with activity.csv data
 
 ```{r, echo=TRUE, message=FALSE}
 options(scipen = 5, digits = 1)
-df.raw <- read.csv("activity.csv")
+df.raw <- read.csv(unz("activity.zip", "activity.csv"))
 summary(df.raw)
 ```
 
