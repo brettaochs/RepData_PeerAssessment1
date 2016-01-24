@@ -95,6 +95,8 @@ ggplot(df.raw.time.summary, aes(x=TrialInterval, y=Steps)) + geom_line() +
 
 Note the heaviest spike around upward trends of graph from 6:00 AM to 9:00 AM when people are waking and heading to school or work!
 
+The interval at **2015-03-11 08:35:00** has the largest number of steps at **206** steps within that 5 minute interval
+
 ## Imputing missing values
 
 There are a total of **$2304$** rows of data missing "steps" observations (i.e. steps = NA) out of **$17568$** total rows in dataset.
@@ -133,6 +135,8 @@ ggplot(df.imputed.summary) + geom_histogram(aes(x=Avg.Steps), binwidth=bw) +
 The mean number of steps per day of imputed data is **10750** steps and is shown in red dashed line on above graph.
 
 The median number of steps per day of imputed data is **10641** steps and shown in blue dotted line on above graph.
+
+Compared with the mean and median for the dataset before imputing missing values we see wide difference in means and some difference in median. We find that imputing NA's increases the mean by around 1400 steps per day while the median is fairly consistent with only an increase of about 300 steps per day.
 
 
 ```r
