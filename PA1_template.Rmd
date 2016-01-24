@@ -29,12 +29,16 @@ summary(df.raw)
 Use the dplyr summarize function to calculate average steps per day without removing "NA"" values. Then use ggplot2 histogram to plot frequencies of steps per day counts. "NA"s were removed from mean and median calculations plotted on graph and called out in text below.
 
 ```{r TotalStepNumber}
+## Make summary data frame to plot histogram of average steps per day
 df.raw.summary <- tbl_df(df.raw) %>%
     group_by(date) %>%
     summarize(Avg.Steps = sum(steps, na.rm=TRUE))
 
-ggplot(df.raw.summary, aes(x=Avg.Steps)) + 
-    geom_histogram() + 
+## Determine binwidth for ggplot2 implementation of histogram using Freedman-Diaconis rule
+bw <- (2 * IQR(df.raw.summary$Avg.Steps) / length(df.raw.summary$Avg.Steps)^(1/3))
+
+## Plot histogram of average steps per day counts and format appropriately
+ggplot(df.raw.summary) + geom_histogram(aes(x=Avg.Steps), binwidth=bw) + 
     geom_vline(xintercept=mean(df.raw.summary$Avg.Steps, na.rm=TRUE), linetype="longdash", colour="red", size=1) +
     geom_vline(xintercept=median(df.raw.summary$Avg.Steps, na.rm=TRUE), linetype="dotted", colour="blue", size=1) + 
     labs(title="Distribution of Total Number of Steps per Day", x="Total Number Steps per Day", y="Count") + 
@@ -45,7 +49,7 @@ ggplot(df.raw.summary, aes(x=Avg.Steps)) +
 
 ```
 
-While we see many "NA" values showing up as zeros in this graph, we can remove "NA"s to calculate mean and median values for the data set.
+While we see many missing values "NA"s showing up as zeros in this graph, we can remove "NA"s to calculate mean and median values for the data set.
 
 - The mean number of steps per day of raw data is **`r round(mean(df.raw.summary$Avg.Steps, na.rm=TRUE), digits=0)`** steps and is shown in red dashed line on above graph.
 
@@ -63,8 +67,15 @@ df.raw.time.summary <- df.raw %>%
               Steps = mean(steps, na.rm=TRUE),
               Interval = unique(interval))
 ggplot(df.raw.time.summary, aes(x=TrialInterval, y=Steps)) + geom_line() + 
-    scale_x_datetime(labels=date_format("%I:%M %P"))
+    scale_x_datetime(labels=date_format("%I:%M %P")) +
+    labs(title="Average Daily Step Activity Pattern Across All Days", x="Time of Day", y="Average Number Steps") + 
+    theme(axis.text.x=element_text(angle=30, vjust=0.5, size=8),
+          axis.text.y=element_text(size=8),
+          axis.title=element_text(size=10),
+          plot.title=element_text(size=12, face="bold"), legend.position="bottom")
 ```
+
+Note the heaviest spike around upward trends of graph from 6:00 AM to 9:00 AM when people are waking and heading to school or work!
 
 ## Imputing missing values
 
