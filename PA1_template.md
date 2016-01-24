@@ -41,9 +41,12 @@ bw <- (2 * IQR(df.raw.summary$Avg.Steps) / length(df.raw.summary$Avg.Steps)^(1/3
 
 ## Plot histogram of average steps per day counts and format appropriately
 ggplot(df.raw.summary) + geom_histogram(aes(x=Avg.Steps), binwidth=bw) + 
-    geom_vline(xintercept=mean(df.raw.summary$Avg.Steps, na.rm=TRUE), linetype="longdash", colour="red", size=1) +
-    geom_vline(xintercept=median(df.raw.summary$Avg.Steps, na.rm=TRUE), linetype="dotted", colour="blue", size=1) + 
-    labs(title="Distribution of Total Number of Steps per Day", x="Total Number Steps per Day", y="Count") + 
+    geom_vline(xintercept=mean(df.raw.summary$Avg.Steps, na.rm=TRUE), 
+               linetype="longdash", colour="red", size=1) +
+    geom_vline(xintercept=median(df.raw.summary$Avg.Steps, na.rm=TRUE), 
+               linetype="dotted", colour="blue", size=1) + 
+    labs(title="Distribution of Total Number of Steps per Day", 
+         x="Total Number Steps per Day", y="Count") + 
     theme(axis.text.x=element_text(angle=30, vjust=0.5, size=8),
           axis.text.y=element_text(size=8),
           axis.title=element_text(size=10),
@@ -72,7 +75,8 @@ df.raw.time.summary <- df.raw %>%
               Interval = unique(interval))
 ggplot(df.raw.time.summary, aes(x=TrialInterval, y=Steps)) + geom_line() + 
     scale_x_datetime(labels=date_format("%I:%M %P")) +
-    labs(title="Average Daily Step Activity Pattern Across All Days", x="Time of Day", y="Average Number Steps") + 
+    labs(title="Average Daily Step Activity Pattern Across All Days", 
+         x="Time of Day", y="Average Number Steps") + 
     theme(axis.text.x=element_text(angle=30, vjust=0.5, size=8),
           axis.text.y=element_text(size=8),
           axis.title=element_text(size=10),
@@ -94,17 +98,32 @@ df.imputed <- tbl_df(df.raw) %>%
 df.imputed.summary <- tbl_df(df.imputed) %>%
     group_by(date) %>%
     summarize(Avg.Steps = sum(Imp.Steps, na.rm=TRUE))
-ggplot(df.imputed.summary, aes(x=Avg.Steps)) + 
-    geom_histogram() + 
-    geom_vline(xintercept=mean(df.imputed.summary$Avg.Steps, na.rm=TRUE), linetype="longdash", colour="red", size=1) +
-    geom_vline(xintercept=median(df.imputed.summary$Avg.Steps, na.rm=TRUE), linetype="dotted", colour="blue", size=1)
 ```
 
-```
-## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+
+```r
+## Determine binwidth for ggplot2 implementation of histogram using Freedman-Diaconis rule
+bw <- (2 * IQR(df.imputed.summary$Avg.Steps) / length(df.imputed.summary$Avg.Steps)^(1/3))
+
+ggplot(df.imputed.summary) + geom_histogram(aes(x=Avg.Steps), binwidth=bw) + 
+    geom_vline(xintercept=mean(df.imputed.summary$Avg.Steps, na.rm=TRUE), 
+               linetype="longdash", colour="red", size=1) +
+    geom_vline(xintercept=median(df.imputed.summary$Avg.Steps, na.rm=TRUE), 
+               linetype="dotted", colour="blue", size=1) +
+    labs(title="Distribution of Total Number of Steps per Day- Impute Missing Values", 
+         x="Total Number Steps per Day", y="Count") + 
+    theme(axis.text.x=element_text(angle=30, vjust=0.5, size=8),
+          axis.text.y=element_text(size=8),
+          axis.title=element_text(size=10),
+          plot.title=element_text(size=12, face="bold"), legend.position="bottom")
 ```
 
-![](PA1_template_files/figure-html/ImputingMissingValues-1.png)
+![](PA1_template_files/figure-html/TotalStepNumberImpute-1.png)
+
+The mean number of steps per day of imputed data is **10750** steps and is shown in red dashed line on above graph.
+
+The median number of steps per day of imputed data is **10641** steps and shown in blue dotted line on above graph.
+
 
 ```r
 ## Graph imputed dataset
@@ -117,14 +136,16 @@ df.imputed.time.summary <- df.imputed %>%
               Steps = mean(Imp.Steps, na.rm=TRUE),
               Interval = unique(interval))
 ggplot(df.imputed.time.summary, aes(x=TrialInterval, y=Steps)) + geom_line() + 
-    scale_x_datetime(labels=date_format("%I:%M %P"))
+    scale_x_datetime(labels=date_format("%I:%M %P")) +
+    labs(title="Average Daily Step Activity Pattern Across All Days- Impute Missing Values", 
+         x="Time of Day", y="Average Number Steps") + 
+    theme(axis.text.x=element_text(angle=30, vjust=0.5, size=8),
+          axis.text.y=element_text(size=8),
+          axis.title=element_text(size=10),
+          plot.title=element_text(size=12, face="bold"), legend.position="bottom")
 ```
 
-![](PA1_template_files/figure-html/ImputingMissingValues-2.png)
-
-The mean number of steps per day of imputed data is **10749.8** steps and is shown in red dashed line on above graph.
-
-The median number of steps per day of imputed data is **10641** steps and shown in blue dotted line on above graph.
+![](PA1_template_files/figure-html/AverageDailyActivityPatternImpute-1.png)
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
