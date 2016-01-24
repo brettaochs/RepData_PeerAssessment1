@@ -94,7 +94,9 @@ There are a total of **$2304$** rows of data missing "steps" observations (i.e. 
 
 ```r
 df.imputed <- tbl_df(df.raw) %>%
-    mutate(Imp.Steps = as.integer(ifelse(is.na(df.raw$steps) == TRUE, df.raw.time.summary$Steps[df.raw.time.summary$Interval %in% df.raw$interval], df.raw$steps)))
+    mutate(Imp.Steps = as.integer(ifelse(is.na(df.raw$steps) == TRUE, 
+                                         df.raw.time.summary$Steps[df.raw.time.summary$Interval %in% 
+                                                                       df.raw$interval], df.raw$steps)))
 df.imputed.summary <- tbl_df(df.imputed) %>%
     group_by(date) %>%
     summarize(Avg.Steps = sum(Imp.Steps, na.rm=TRUE))
@@ -163,7 +165,13 @@ df.imputed.weekly.summary <- df.imputed.weekly %>%
               Steps = mean(Imp.Steps, na.rm=TRUE),
               Interval = unique(interval))
 ggplot(df.imputed.weekly.summary, aes(x=TrialInterval, y=Steps)) + geom_line() + 
-    scale_x_datetime(labels=date_format("%I:%M %P")) + facet_grid(Week.Class ~ .)
+    scale_x_datetime(labels=date_format("%I:%M %P")) + facet_grid(Week.Class ~ .) +
+    labs(title="Average Daily Step Activity Pattern- Impute Missing Values", 
+         x="Time of Day", y="Average Number Steps") + 
+    theme(axis.text.x=element_text(angle=30, vjust=0.5, size=8),
+          axis.text.y=element_text(size=8),
+          axis.title=element_text(size=10),
+          plot.title=element_text(size=12, face="bold"), legend.position="bottom")
 ```
 
 ![](PA1_template_files/figure-html/ActivityPatternDifferenceWeekendVsWeekday-1.png)
