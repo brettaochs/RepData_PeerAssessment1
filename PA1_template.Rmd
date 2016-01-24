@@ -5,16 +5,17 @@ output:
   html_document:
     keep_md: true
 ---
-Loading packages "dplyr" and "ggplot2" done with include="FALSE" to restrict package loading messages.
 
-## Loading and preprocessing the data
-```{r LoadPackages, echo=TRUE, include=FALSE}
+Loading packages "dplyr" and "ggplot2" done with message="FALSE" to restrict package loading messages.
+```{r LoadPackages, echo=TRUE, message=FALSE}
 require(dplyr)
 require(ggplot2)
 require(lubridate)
 require(scales)
 require(stringr)
 ```
+
+## Loading and preprocessing the data
 
 Unzip and read in activity.csv from working directory into data frame.
 
@@ -161,3 +162,5 @@ ggplot(df.imputed.weekly.summary, aes(x=TrialInterval, y=Steps)) + geom_line() +
           plot.title=element_text(size=12, face="bold"), legend.position="bottom")
 
 ```
+
+Note the step activity is more consistent throughout the day on the weekends. There aren't as drastic of peaks and valleys, and it seems the morning is not as strong of signal compared to weekdays.

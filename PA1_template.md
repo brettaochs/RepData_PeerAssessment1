@@ -1,9 +1,17 @@
 # Reproducible Research: Peer Assessment 1
 Brett A. Ochs  
-Loading packages "dplyr" and "ggplot2" done with include="FALSE" to restrict package loading messages.
+
+Loading packages "dplyr" and "ggplot2" done with message="FALSE" to restrict package loading messages.
+
+```r
+require(dplyr)
+require(ggplot2)
+require(lubridate)
+require(scales)
+require(stringr)
+```
 
 ## Loading and preprocessing the data
-
 
 Unzip and read in activity.csv from working directory into data frame.
 
@@ -175,3 +183,5 @@ ggplot(df.imputed.weekly.summary, aes(x=TrialInterval, y=Steps)) + geom_line() +
 ```
 
 ![](PA1_template_files/figure-html/ActivityPatternDifferenceWeekendVsWeekday-1.png)
+
+Note the step activity is more consistent throughout the day on the weekends. There aren't as drastic of peaks and valleys, and it seems the morning is not as strong of signal compared to weekdays.
